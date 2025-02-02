@@ -5,25 +5,60 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
+    lateinit var dbHelper: DatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login) // Pastikan layout sesuai
+        setContentView(R.layout.activity_login)
 
-        val nama = findViewById<EditText>(R.id.editTextText)
-        val pass = findViewById<EditText>(R.id.editTextTextPassword)
-        val buttonClick = findViewById<Button>(R.id.button)
+        dbHelper = DatabaseHelper(this)
 
-        buttonClick.setOnClickListener {
-            if (nama.text.toString() == "user" && pass.text.toString() == "123") {
-                val intent = Intent(this, MainActivity::class.java)
-                Toast.makeText(this, "Login Success!", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
+
+        if (!dbHelper.isUserRegistered()) {
+
+            startActivity(Intent(this, RegisterActivity::class.java))
+            finish()
+        }
+
+        val username = findViewById<EditText>(R.id.editTextText)
+        val password = findViewById<EditText>(R.id.editTextTextPassword)
+        val loginButton = findViewById<Button>(R.id.button)
+        val registerButton = findViewById<Button>(R.id.button2)
+
+        loginButton.setOnClickListener {
+            val user = username.text.toString()
+            val pass = password.text.toString()
+
+            if (user.isNotEmpty() && pass.isNotEmpty()) {
+                val isValid = dbHelper.checkUser(user, pass)
+                if (isValid) {
+                    Toast.makeText(this, "Login Berhasil!", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                } else {
+                    showErrorDialog("Login Gagal", "Username atau Password Salah!")
+                }
             } else {
-                Toast.makeText(this, "Login Failed!", Toast.LENGTH_SHORT).show()
+                showErrorDialog("Input Kosong", "Harap isi username dan password!")
             }
         }
+
+
+        registerButton.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+    }
+
+
+    private fun showErrorDialog(title: String, message: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
     }
 }

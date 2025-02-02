@@ -11,8 +11,8 @@ class KalkulatorActivity : AppCompatActivity() {
 
     private lateinit var tvDisplay: TextView
     private var currentInput = ""
-    private var firstNumber: Double? = null
-    private var operator: String? = null
+    private val numberStack = mutableListOf<Double>()  // Stack untuk menyimpan angka
+    private val operatorStack = mutableListOf<String>()  // Stack untuk menyimpan operator
     private var isNewOperation = true
     private lateinit var buttonEffect: MediaPlayer
 
@@ -22,24 +22,20 @@ class KalkulatorActivity : AppCompatActivity() {
 
         tvDisplay = findViewById(R.id.tv_display)
 
-        // Inisialisasi MediaPlayer untuk suara tombol
         buttonEffect = MediaPlayer.create(this, R.raw.button_effect)
 
-        // Ambil semua tombol
         val buttons = listOf(
             R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4,
             R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8, R.id.btn_9
         )
 
-        // Set listener untuk tombol angka
         buttons.forEach { id ->
             findViewById<Button>(id).setOnClickListener {
-                playButtonSound()  // Mainkan suara
+                playButtonSound()
                 appendNumber((it as Button).text.toString())
             }
         }
 
-        // Operator
         findViewById<Button>(R.id.btn_add).setOnClickListener {
             playButtonSound()
             setOperator("+")
@@ -69,7 +65,6 @@ class KalkulatorActivity : AppCompatActivity() {
             calculateSqrt()
         }
 
-        // Fungsi lainnya
         findViewById<Button>(R.id.btn_clear).setOnClickListener {
             playButtonSound()
             clearDisplay()
@@ -84,19 +79,17 @@ class KalkulatorActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btn_back).setOnClickListener {
             playButtonSound()
-            finish()  // Menutup aktivitas
+            finish()
         }
     }
 
-    // Fungsi untuk memutar suara
     private fun playButtonSound() {
         if (buttonEffect.isPlaying) {
-            buttonEffect.seekTo(0)  // Mengulang suara jika sedang diputar
+            buttonEffect.seekTo(0)
         }
-        buttonEffect.start()  // Memutar suara
+        buttonEffect.start()
     }
 
-    // Fungsi menambahkan angka ke display
     private fun appendNumber(number: String) {
         if (isNewOperation) {
             currentInput = number
@@ -107,35 +100,37 @@ class KalkulatorActivity : AppCompatActivity() {
         updateDisplay()
     }
 
-    // Fungsi memilih operator
     private fun setOperator(op: String) {
         if (currentInput.isNotEmpty()) {
-            firstNumber = currentInput.toDoubleOrNull()
-            operator = op
+            numberStack.add(currentInput.toDouble())
+            operatorStack.add(op)
+            currentInput = ""
             isNewOperation = true
         }
     }
 
-    // Fungsi untuk menghitung hasil
     private fun calculateResult() {
-        if (firstNumber != null && operator != null && currentInput.isNotEmpty()) {
-            val secondNumber = currentInput.toDoubleOrNull() ?: return
-            val result = when (operator) {
-                "+" -> firstNumber!! + secondNumber
-                "-" -> firstNumber!! - secondNumber
-                "×" -> firstNumber!! * secondNumber
-                "÷" -> if (secondNumber != 0.0) firstNumber!! / secondNumber else "Error"
-                else -> return
+        if (currentInput.isNotEmpty()) {
+            numberStack.add(currentInput.toDouble()) // Menambahkan angka terakhir
+
+            var result = numberStack[0]
+            for (i in 1 until numberStack.size) {
+                val operator = operatorStack[i - 1]
+                when (operator) {
+                    "+" -> result += numberStack[i]
+                    "-" -> result -= numberStack[i]
+                    "×" -> result *= numberStack[i]
+                    "÷" -> if (numberStack[i] != 0.0) result /= numberStack[i] else result = Double.NaN
+                }
             }
             currentInput = result.toString()
-            firstNumber = null
-            operator = null
+            numberStack.clear()
+            operatorStack.clear()
             isNewOperation = true
             updateDisplay()
         }
     }
 
-    // Fungsi persen
     private fun calculatePercent() {
         if (currentInput.isNotEmpty()) {
             val result = currentInput.toDoubleOrNull()?.div(100)
@@ -144,7 +139,6 @@ class KalkulatorActivity : AppCompatActivity() {
         }
     }
 
-    // Fungsi pangkat dua (x²)
     private fun calculateSquare() {
         if (currentInput.isNotEmpty()) {
             val result = currentInput.toDoubleOrNull()?.let { it * it }
@@ -153,7 +147,6 @@ class KalkulatorActivity : AppCompatActivity() {
         }
     }
 
-    // Fungsi akar kuadrat (√)
     private fun calculateSqrt() {
         if (currentInput.isNotEmpty()) {
             val result = currentInput.toDoubleOrNull()?.let { sqrt(it) }
@@ -162,7 +155,6 @@ class KalkulatorActivity : AppCompatActivity() {
         }
     }
 
-    // Fungsi untuk hapus per karakter (⌫)
     private fun deleteLastChar() {
         if (currentInput.isNotEmpty()) {
             currentInput = currentInput.dropLast(1)
@@ -171,23 +163,21 @@ class KalkulatorActivity : AppCompatActivity() {
         }
     }
 
-    // Fungsi untuk menghapus semuanya (C)
     private fun clearDisplay() {
         currentInput = "0"
-        firstNumber = null
-        operator = null
+        numberStack.clear()
+        operatorStack.clear()
         isNewOperation = true
         updateDisplay()
     }
 
-    // Fungsi update tampilan
     private fun updateDisplay() {
         tvDisplay.text = currentInput
     }
 
-    // Pastikan untuk melepaskan resource MediaPlayer saat aktivitas dihancurkan
     override fun onDestroy() {
         super.onDestroy()
         buttonEffect.release()
     }
 }
+

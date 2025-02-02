@@ -22,13 +22,13 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Menambahkan OnClickListener pada calculator_button1
+
         val calculatorButton1 = findViewById<LinearLayout>(R.id.calculator_button1)
         calculatorButton1.setOnClickListener {
-            // Aksi yang akan dilakukan saat tombol diklik
+
             Toast.makeText(this, "Calculator Button 1 clicked", Toast.LENGTH_SHORT).show()
 
-            // Membuat Intent untuk membuka KalkulatorActivity
+
             val intent = Intent(this, KalkulatorActivity::class.java)
             startActivity(intent)
         }
