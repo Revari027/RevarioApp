@@ -12,8 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/formContainer"
-        android:layout_width="383dp"
-        android:layout_height="207dp"
+        android:layout_width="392dp"
+        android:layout_height="218dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -26,6 +26,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
             android:text="Username :"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/editTextText"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:ems="10"
+            android:fontFamily="@font/poppins_medium"
             android:hint="Masukkan nama mu"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,11 +55,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_medium"
             android:text="Password :"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/editTextTextPassword"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+
+        <!-- Login Button -->
 
         <EditText
             android:id="@+id/editTextTextPassword"
@@ -65,13 +70,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:ems="10"
+            android:fontFamily="@font/poppins_medium"
             android:hint="Masukkan Password mu"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 
-        <!-- Login Button -->
         <Button
             android:id="@+id/button"
             android:layout_width="202dp"
@@ -79,6 +84,7 @@
             android:layout_marginTop="8dp"
             android:backgroundTint="#4CAF50"
             android:text="Login"
+            android:fontFamily="@font/poppins_bold"
             android:textColor="#FFFFFF"
             app:cornerRadius="5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +97,8 @@
             android:layout_width="203dp"
             android:layout_height="45dp"
             android:layout_marginTop="8dp"
+            android:backgroundTint="#2196F3"
+            android:fontFamily="@font/poppins_bold"
             android:text="Register"
             app:layout_constraintStart_toStartOf="@+id/button"
             app:layout_constraintTop_toBottomOf="@+id/button" />
@@ -113,7 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="116dp"
         android:layout_marginTop="108dp"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="@font/poppins_bold"
         android:gravity="center|center_horizontal|center_vertical"
         android:text="REVARIO MOBILE APP"
         app:layout_constraintStart_toStartOf="parent"

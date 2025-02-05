@@ -9,22 +9,28 @@
     android:padding="20dp">
 
     <!-- EditText untuk Nama Lengkap -->
+
+    <!-- EditText untuk Username -->
+
     <EditText
         android:id="@+id/editTextFullName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:fontFamily="@font/poppins_medium"
         android:hint="Nama Lengkap"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- EditText untuk Username -->
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Username"
+        android:fontFamily="@font/poppins_medium"
         android:inputType="textPersonName"
         app:layout_constraintTop_toBottomOf="@id/editTextFullName"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,21 +44,25 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
+        android:fontFamily="@font/poppins_medium"
         app:layout_constraintTop_toBottomOf="@id/editTextUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
     <!-- Tombol Register -->
+
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="52dp"
         android:backgroundTint="#4CAF50"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Daftar"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
@@ -62,11 +72,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="#FF1000"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Kembali"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="183dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="150dp"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:text="Halaman Registrasi"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.597"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
