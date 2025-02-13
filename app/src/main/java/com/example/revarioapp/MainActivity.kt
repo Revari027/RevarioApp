@@ -33,6 +33,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val notes = findViewById<LinearLayout>(R.id.calculator_button2)
+        notes.setOnClickListener {
+        Toast.makeText(this, "Notes di buka yang mulia", Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(this, NoteActivity::class.java)
+        startActivity(intent)
+        }
+
         val btnClose = findViewById<Button>(R.id.button)
         btnClose.setOnClickListener {
             finish()

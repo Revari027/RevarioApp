@@ -7,4 +7,6 @@
     <color name="blueish">#3F6275</color>
     <color name="red">#F44336</color>
     <color name="white1">#FFFFFF</color>
+    <color name="orange">#FF5722</color>
+    <color name="gray_light">#B7B5B5</color>
 </resources>
