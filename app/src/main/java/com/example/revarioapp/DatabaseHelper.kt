@@ -10,7 +10,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "UserDB"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         // Tabel users
         private const val TABLE_USERS = "users"
@@ -24,33 +24,61 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_NOTE_ID = "id"
         private const val COLUMN_NOTE_TITLE = "title"
         private const val COLUMN_NOTE_CONTENT = "content"
+
+        //Tabel book
+        private const val TABLE_BOOKS = "book"
+        private const val COLUMN_BOOK_ID = "id"
+        private const val COLUMN_NAMA = "nama"
+        private const val COLUMN_NAMA_PANGGILAN = "nama_panggilan"
+        private const val COLUMN_POTO = "poto"
+        private const val COLUMN_EMAIL = "email"
+        private const val COLUMN_ALAMAT = "alamat"
+        private const val COLUMN_TGL_LAHIR = "tgl_lahir"
+        private const val COLUMN_TELEPON = "telepon"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+        // Create users table
         val createUsersTable = """
-        CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            fullname TEXT, 
-            username TEXT UNIQUE, 
-            password TEXT
+        CREATE TABLE $TABLE_USERS (
+            $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            $COLUMN_FULLNAME TEXT, 
+            $COLUMN_USERNAME TEXT UNIQUE, 
+            $COLUMN_PASSWORD TEXT
         )
     """.trimIndent()
         db.execSQL(createUsersTable)
 
+        // Create notes table
         val createNotesTable = """
-        CREATE TABLE allnotes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            title TEXT NOT NULL, 
-            content TEXT NOT NULL
+        CREATE TABLE $TABLE_NOTES (
+            $COLUMN_NOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            $COLUMN_NOTE_TITLE TEXT NOT NULL, 
+            $COLUMN_NOTE_CONTENT TEXT NOT NULL
         )
     """.trimIndent()
         db.execSQL(createNotesTable)
-    }
 
+        // Create books table
+        val createBooksTable = """
+        CREATE TABLE $TABLE_BOOKS (
+            $COLUMN_BOOK_ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            $COLUMN_NAMA TEXT NOT NULL, 
+            $COLUMN_NAMA_PANGGILAN TEXT NOT NULL, 
+            $COLUMN_POTO BLOB NOT NULL, 
+            $COLUMN_EMAIL TEXT NOT NULL, 
+            $COLUMN_ALAMAT TEXT NOT NULL, 
+            $COLUMN_TGL_LAHIR TEXT NOT NULL, 
+            $COLUMN_TELEPON TEXT NOT NULL
+        )
+    """.trimIndent()
+        db.execSQL(createBooksTable)
+    }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTES")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_BOOKS")
         onCreate(db)
     }
 
@@ -154,5 +182,90 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val result = db.update(TABLE_NOTES, values, "$COLUMN_NOTE_ID = ?", arrayOf(note.id.toString()))
         db.close()
         return result > 0
+    }
+
+    // --- BOOK FUNCTIONS ---
+    fun insertBook(book: Book) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_NAMA, book.nama)
+            put(COLUMN_NAMA_PANGGILAN, book.nama_panggilan)
+            put(COLUMN_POTO, book.poto)
+            put(COLUMN_EMAIL, book.email)
+            put(COLUMN_ALAMAT, book.alamat)
+            put(COLUMN_TGL_LAHIR, book.tgl_lahir)
+            put(COLUMN_TELEPON, book.telepon)
+        }
+        db.insert(TABLE_BOOKS, null, values)
+        db.close()
+    }
+
+    fun getAllBooks(): List<Book> {
+        val booksList = mutableListOf<Book>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_BOOKS"
+        val cursor = db.rawQuery (query, null)
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+            val nama = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAMA))
+            val nama_panggilan = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAMA_PANGGILAN))
+            val poto = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_POTO))
+            val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+            val alamat = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ALAMAT))
+            val tgl_lahir = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TGL_LAHIR))
+            val telepon = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TELEPON))
+
+            val book = Book(id, nama, nama_panggilan, poto, email, alamat, tgl_lahir, telepon)
+            booksList.add(book)
+        }
+        cursor.close()
+        db.close()
+        return booksList
+    }
+
+    fun updateBook(book: Book): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_NAMA, book.nama)
+            put(COLUMN_NAMA_PANGGILAN, book.nama_panggilan)
+            put(COLUMN_POTO, book.poto)
+            put(COLUMN_EMAIL, book.email)
+            put(COLUMN_ALAMAT, book.alamat)
+            put(COLUMN_TGL_LAHIR, book.tgl_lahir)
+            put(COLUMN_TELEPON, book.telepon)
+        }
+        val whereClause = "$COLUMN_ID = ?"
+        val whereArgs = arrayOf(book.id.toString())
+        val rowsAffected = db.update(TABLE_BOOKS, values, whereClause, whereArgs)
+        db.close()
+        return rowsAffected > 0
+    }
+
+    fun getBookById(bookId: Int): Book {
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_BOOKS WHERE $COLUMN_ID = $bookId"
+        val cursor = db.rawQuery(query, null)
+        cursor.moveToFirst()
+
+        val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+        val nama = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAMA))
+        val nama_panggilan = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAMA_PANGGILAN))
+        val poto = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_POTO))
+        val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+        val alamat = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ALAMAT))
+        val tgl_lahir = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TGL_LAHIR))
+        val telepon = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TELEPON))
+        cursor.close()
+        db.close()
+        return Book(id, nama, nama_panggilan, poto, email, alamat, tgl_lahir, telepon)
+    }
+
+    fun deleteBook(bookId: Int) {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_ID = ?"
+        val whereArgs = arrayOf(bookId.toString())
+        db.delete (TABLE_BOOKS, whereClause, whereArgs)
+        db.close()
     }
 }

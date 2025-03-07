@@ -20,14 +20,14 @@
 
         <TextView
             android:id="@+id/titleText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
             android:gravity="center"
             android:text="Note App Revario"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_semibold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/nameText"

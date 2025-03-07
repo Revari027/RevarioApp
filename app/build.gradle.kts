@@ -40,7 +40,9 @@ android {
 }
 
 dependencies {
-
+    implementation("com.vanniktech:android-image-cropper:4.5.0")
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.github.f0ris.sweetalert:library:1.5.6")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

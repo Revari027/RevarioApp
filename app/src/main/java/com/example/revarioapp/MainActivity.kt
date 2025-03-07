@@ -5,47 +5,51 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+
+    private var backPressedTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Tombol Kalkulator
+        val calculatorButton = findViewById<LinearLayout>(R.id.calculator_button1)
+        calculatorButton.setOnClickListener {
+            Toast.makeText(this, "Membuka Kalkulator", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, KalkulatorActivity::class.java))
         }
 
-
-        val calculatorButton1 = findViewById<LinearLayout>(R.id.calculator_button1)
-        calculatorButton1.setOnClickListener {
-
-            Toast.makeText(this, "Calculator Button 1 clicked", Toast.LENGTH_SHORT).show()
-
-
-            val intent = Intent(this, KalkulatorActivity::class.java)
-            startActivity(intent)
+        // Tombol Catatan (Notes)
+        val notesButton = findViewById<LinearLayout>(R.id.calculator_button2) // ID lebih deskriptif
+        notesButton.setOnClickListener {
+            Toast.makeText(this, "Membuka Catatan", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, NoteActivity::class.java))
         }
 
-        val notes = findViewById<LinearLayout>(R.id.calculator_button2)
-        notes.setOnClickListener {
-        Toast.makeText(this, "Notes di buka yang mulia", Toast.LENGTH_SHORT).show()
-
-        val intent = Intent(this, NoteActivity::class.java)
-        startActivity(intent)
+        // Tombol Ebook
+        val ebookButton = findViewById<LinearLayout>(R.id.calculator_button3) // ID lebih deskriptif
+        notesButton.setOnClickListener {
+            Toast.makeText(this, "Membuka Ebook", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MainBook::class.java))
         }
 
+        // Tombol Close (Keluar dari aplikasi)
         val btnClose = findViewById<Button>(R.id.button)
         btnClose.setOnClickListener {
-            finish()
+            finishAffinity() // Menutup semua activity
         }
+    }
 
-
+    // Logika untuk keluar dengan double-tap
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, "Tekan sekali lagi untuk keluar", Toast.LENGTH_SHORT).show()
+        }
+        backPressedTime = System.currentTimeMillis()
     }
 }
